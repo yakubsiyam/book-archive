@@ -1,27 +1,34 @@
-// global variable
+// global variables
 const booksDetailsContainer = document.getElementById('books-container');
+const totalNumResultContainer = document.getElementById('total-result');
 
 // search input and pass the value
 const loadBookSearch = () =>{
     const bookInput = document.getElementById('book-input').value;
-    fetch(`https://openlibrary.org/search.json?q=${bookInput}`)
-        .then(res => res.json())
-        .then(data => totalResult(data))            //call the function
     booksDetailsContainer.innerHTML = '';           //clear book details container
+    if(bookInput === ""){
+        totalNumResultContainer.innerHTML = `
+            <p class= "text-center text-danger fs-3">Please Type Something!!!</p>
+        `;
+    }
+    else{
+        fetch(`https://openlibrary.org/search.json?q=${bookInput}`)
+            .then(res => res.json())
+            .then(data => totalResultFound(data))            //call the function
+    }
     document.getElementById('book-input').value = '';           //clear book input box
 }
 
 // show total result
-const totalResult = books =>{
-    const totalResultContainer = document.getElementById('total-result');
+const totalResultFound = books =>{
     const totalNumResult = books.num_found;
     if(totalNumResult === 0){
-        totalResultContainer.innerHTML = `
+        totalNumResultContainer.innerHTML = `
             <p class= "text-center text-danger fs-3">No Result Found!!!</p>
         `;
     }
     else{
-        totalResultContainer.innerHTML = `
+        totalNumResultContainer.innerHTML = `
             <p class= "text-center text-success fs-3">Total Results Found: ${totalNumResult}</p>    
         `;
     }
